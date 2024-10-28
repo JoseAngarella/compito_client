@@ -21,19 +21,33 @@ public class Main {
             DataOutputStream out = new DataOutputStream(mySocket.getOutputStream()); 
             
             
-            System.out.println("scrivi Esci per uscire, Lista per visualizzare la lista \n inserisci una elemento da aggiungere alle note:");
+            System.out.println("scrivi Esci per uscire\n Lista per visualizzare la lista\n Elimina per togliere un elemento \nInserisci una elemento da aggiungere alle note :");
             String messaggio;
+            String rispostaRicevuta;
             do {
+                rispostaRicevuta="";
                 messaggio = scanner.nextLine();
                 switch (messaggio) {
                     case "Lista":
                         out.writeBytes("?"+"\n");
-                        String elementoRicevuto= in.readLine();
-                        while (!elementoRicevuto.equals("@")) {
-                            System.out.println(elementoRicevuto);
-                            elementoRicevuto=in.readLine();
+                        rispostaRicevuta= in.readLine();
+                        while (!rispostaRicevuta.equals("@")) {
+                            System.out.println(rispostaRicevuta);
+                            rispostaRicevuta=in.readLine();
                         };
                         System.out.println("Lista finita");
+                        break;
+                    case "Elimina":
+                        out.writeBytes(messaggio+"\n");
+                        System.out.println("inserisci il numero dell'elemento da togliere dalla lista");
+                        messaggio=scanner.nextLine();
+                        out.writeBytes(messaggio+"\n");
+                        rispostaRicevuta=in.readLine();
+                        if(rispostaRicevuta.equals("OK")){
+                            System.out.println("Nota cancellata");
+                        }else if(rispostaRicevuta.equals("errore")){
+                            System.out.println("Nota non cancellata, riprova");
+                        }
                         break;
                     case "Esci":
                         System.out.println("\nConnessione terminata");
@@ -42,7 +56,7 @@ public class Main {
                 
                     default:
                         out.writeBytes(messaggio+"\n");
-                        String rispostaRicevuta=in.readLine();
+                        rispostaRicevuta=in.readLine();
                         if(rispostaRicevuta.equals("OK")){
                             System.out.println("Nota Salvata");
                         }else{
